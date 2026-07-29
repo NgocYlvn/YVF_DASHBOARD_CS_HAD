@@ -39,6 +39,14 @@ h1, h2, h3 {color: #17324D;}
 .kpi-note {font-size:12px; color:#7D8B99; margin-top:8px;}
 .section-title {font-size:18px; font-weight:750; color:#17324D; margin:8px 0 10px;}
 .insight {background:white; border-left:5px solid #F36F21; border-radius:12px; padding:15px 17px; box-shadow:0 4px 14px rgba(23,50,77,.05); margin:4px 0 12px;}
+.insight p{
+    margin:0 0 10px 0;
+    line-height:1.7;
+}
+
+.insight p:last-child{
+    margin-bottom:0;
+}
 .quote-card {background:white; border:1px solid #E7ECF1; border-radius:14px; padding:16px 18px; height:100%; box-shadow:0 3px 12px rgba(23,50,77,.05);}
 .quote {font-size:16px; color:#17324D; line-height:1.55;}
 .quote-meta {font-size:12px; color:#758696; margin-top:10px; font-weight:650;}
