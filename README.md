@@ -1,2 +1,2 @@
-# YVF Dashboard CS HAD V6
+# YVF Dashboard CS HAD
 Run: streamlit run app.py
