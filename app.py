@@ -163,7 +163,17 @@ st.sidebar.success("Excel workbook connected")
 st.sidebar.caption("Update the Excel file in the data folder to refresh the dashboard.")
 
 st.markdown(
-    f'<div class="hero"><h1>{APP_TITLE}</h1><p>Executive overview of customer adoption, booking performance, user issues, improvement proposals, and customer feedback.</p></div>',
+    f"""
+    <div class="insight">
+        <p><b>Adoption:</b> {fmt_int(active)} active customers out of {fmt_int(onboarded_count)} approved accounts.</p>
+
+        <p><b>Bookings:</b> {fmt_int(yvf_bookings)} YVF bookings, equivalent to {fmt_pct(booking_achievement)} of the monthly target.</p>
+
+        <p><b>Issues:</b> {open_issues} open and {completed_issues} completed.</p>
+
+        <p><b>Customer Feedback:</b> {len(feedback)} positive feedback records captured.</p>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
