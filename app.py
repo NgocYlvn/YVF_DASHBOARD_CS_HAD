@@ -197,8 +197,6 @@ page = st.sidebar.radio(
     label_visibility="collapsed",
 )
 st.sidebar.markdown("---")
-st.sidebar.caption("Data source")
-
 st.markdown(
     f'<div class="hero"><h1>{APP_TITLE}</h1><p>Executive overview of customer adoption, booking performance, user issues, improvement proposals, and customer feedback.</p></div>',
     unsafe_allow_html=True,
