@@ -195,12 +195,6 @@ page = st.sidebar.radio(
     "Navigation",
     ["🏠 Overview", "👥 Adoption", "📦 Booking status", "⚠️ User Issues", "💡 Improvement", "⭐ Feedback"],
     label_visibility="collapsed",
-)
-st.sidebar.markdown("---")
-
-# Lấy thời gian cập nhật cuối của file dữ liệu
-last_update = datetime.fromtimestamp(DATA_FILE.stat().st_mtime)
-current_time = last_update.strftime("%d %b %Y | %H:%M")
 
 st.markdown(
     f"""
