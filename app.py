@@ -105,19 +105,6 @@ def load_data(path: str) -> Dict[str, pd.DataFrame]:
     return result
 
 
-def find_column(df: pd.DataFrame, *candidates: str) -> str | None:
-    """Return the first matching column, ignoring spaces, punctuation and letter case."""
-    normalized = {
-        "".join(ch.lower() for ch in str(col) if ch.isalnum()): col
-        for col in df.columns
-    }
-    for candidate in candidates:
-        key = "".join(ch.lower() for ch in candidate if ch.isalnum())
-        if key in normalized:
-            return normalized[key]
-    return None
-
-
 def safe_num(value, default=0.0) -> float:
     try:
         if pd.isna(value):
@@ -139,21 +126,11 @@ def fmt_pct(value) -> str:
 
 
 def kpi(label: str, value: str, note: str = "") -> None:
-   from datetime import datetime
-
-st.markdown(
-    f"""
-    <div class="hero">
-        <h1>{APP_TITLE}</h1>
-        <p>
-            📅 Last Updated: {datetime.today().strftime("%d %b %Y")}
-            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-            📊 Data Source: YVF Adoption Dashboard
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+    st.markdown(
+        f'<div class="kpi-card"><div class="kpi-label">{label}</div>'
+        f'<div class="kpi-value">{value}</div><div class="kpi-note">{note}</div></div>',
+        unsafe_allow_html=True,
+    )
 
 
 def style_fig(fig, height: int = 350):
@@ -321,50 +298,9 @@ elif page == "👥 Customer Adoption":
         fig.update_traces(textposition="inside", textinfo="percent+label")
         st.plotly_chart(style_fig(fig), use_container_width=True)
     with right:
-        status_col = find_column(volume, "YVF Status", "Status")
-        total_volume_col = find_column(
-            volume,
-            "Total Volume",
-            "Total Shipment Volume",
-            "Total Export Volume",
-            "Total",
-        )
-
-        if status_col and total_volume_col:
-            volume[total_volume_col] = pd.to_numeric(volume[total_volume_col], errors="coerce").fillna(0)
-            status_volume = (
-                volume.groupby(status_col, as_index=False)[total_volume_col]
-                .sum()
-                .sort_values(total_volume_col, ascending=False)
-            )
-            fig = px.bar(
-                status_volume,
-                x=status_col,
-                y=total_volume_col,
-                text=total_volume_col,
-                title="Shipment Volume by YVF Status",
-                color=status_col,
-                color_discrete_sequence=[BLUE, ORANGE, GREEN, "#8394A5", "#B0BBC5"],
-            )
-        else:
-            missing_cols = []
-            if not status_col:
-                missing_cols.append("YVF Status")
-            if not total_volume_col:
-                missing_cols.append("Total Volume")
-            st.warning(
-                "Customer_Volume is missing: "
-                + ", ".join(missing_cols)
-                + ". Available columns: "
-                + ", ".join(map(str, volume.columns))
-            )
-            status_volume = pd.DataFrame({"Status": [], "Volume": []})
-            fig = px.bar(
-                status_volume,
-                x="Status",
-                y="Volume",
-                title="Shipment Volume by YVF Status",
-            )
+        status_volume = volume.groupby("YVF Status", as_index=False)["Total Volume"].sum().sort_values("Total Volume", ascending=False)
+        fig = px.bar(status_volume, x="YVF Status", y="Total Volume", text="Total Volume", title="Shipment Volume by YVF Status",
+                     color="YVF Status", color_discrete_sequence=[BLUE, ORANGE, GREEN, "#8394A5", "#B0BBC5"])
         fig.update_traces(textposition="outside")
         st.plotly_chart(style_fig(fig), use_container_width=True)
 
