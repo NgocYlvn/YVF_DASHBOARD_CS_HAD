@@ -193,13 +193,11 @@ st.sidebar.markdown("## 📊 CS HAD")
 st.sidebar.caption("YVF Adoption Dashboard")
 page = st.sidebar.radio(
     "Navigation",
-    ["🏠 Overview", "👥 Customer Adoption", "📦 Booking Performance", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Customer Feedback"],
+    ["🏠 Overview", "👥 Adoption", "📦 Booking status", "⚠️ User Issues", "💡 Improvement", "⭐ Feedback"],
     label_visibility="collapsed",
 )
 st.sidebar.markdown("---")
 st.sidebar.caption("Data source")
-st.sidebar.success("Excel workbook connected")
-st.sidebar.caption("Update the Excel file in the data folder to refresh the dashboard.")
 
 st.markdown(
     f'<div class="hero"><h1>{APP_TITLE}</h1><p>Executive overview of customer adoption, booking performance, user issues, improvement proposals, and customer feedback.</p></div>',
