@@ -10,7 +10,7 @@ import streamlit as st
 
 
 APP_TITLE = "CS HAD – YVF Adoption Dashboard"
-DATA_FILE = Path(__file__).parent / "data" / "YVF_Adoption_Dashboard_Source.xlsx"
+DATA_FILE = Path(__file__).parent / "YVF_Adoption_Dashboard_Source.xlsx"
 BLUE = "#0B4F8A"
 ORANGE = "#F36F21"
 DARK = "#17324D"
