@@ -35,6 +35,9 @@ st.markdown(
     padding-right: 2rem;
     max-width: 1500px;
 }
+section.main > div {
+    padding-left: 1rem;
+}
 h1, h2, h3 {color: #17324D;}
 .hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 22px 26px; border-radius: 18px; color: white; box-shadow: 0 8px 24px rgba(11,79,138,.16); margin-bottom: 18px;}
 .hero h1 {color:white; margin:0; font-size:30px;}
