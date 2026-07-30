@@ -31,23 +31,53 @@ st.markdown(
 .block-container {
     padding-top: 1.25rem;
     padding-bottom: 2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
     max-width: 1500px;
 }
-section.main > div {
-    padding-left: 1rem;
+
+/* Keep the collapsed sidebar button from covering dashboard content */
+[data-testid="stAppViewContainer"] .main {
+    overflow-x: hidden;
+}
+
+[data-testid="stAppViewContainer"] section.main {
+    min-width: 0;
+}
+
+[data-testid="collapsedControl"] {
+    left: 0.75rem;
+    top: 0.75rem;
+    z-index: 1000;
+}
+
+@media (max-width: 1200px) {
+    .block-container {
+        padding-left: 4rem;
+        padding-right: 1.25rem;
+    }
 }
 h1, h2, h3 {color: #17324D;}
 .hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 22px 26px; border-radius: 18px; color: white; box-shadow: 0 8px 24px rgba(11,79,138,.16); margin-bottom: 18px;}
 .hero h1 {color:white; margin:0; font-size:30px;}
 .hero p {margin:5px 0 0 0; opacity:.88;}
-.kpi-card {background:white; border:1px solid #E5EAF0; border-radius:15px; padding:16px 17px; min-height:118px; box-shadow:0 4px 14px rgba(23,50,77,.06);}
+.kpi-card {
+    background:white;
+    border:1px solid #E5EAF0;
+    border-radius:15px;
+    padding:16px 17px;
+    min-height:118px;
+    height:100%;
+    box-shadow:0 4px 14px rgba(23,50,77,.06);
+    overflow-wrap:anywhere;
+}
 .kpi-label {font-size:13px; color:#68798A; font-weight:600; margin-bottom:10px;}
 .kpi-value {font-size:29px; font-weight:750; color:#17324D; line-height:1.05;}
 .kpi-note {font-size:12px; color:#7D8B99; margin-top:8px;}
 .section-title {font-size:18px; font-weight:750; color:#17324D; margin:8px 0 10px;}
 .insight {background:white; border-left:5px solid #F36F21; border-radius:12px; padding:15px 17px; box-shadow:0 4px 14px rgba(23,50,77,.05); margin:4px 0 12px;}
+.insight p {margin:0 0 9px 0; line-height:1.65;}
+.insight p:last-child {margin-bottom:0;}
 .quote-card {background:white; border:1px solid #E7ECF1; border-radius:14px; padding:16px 18px; height:100%; box-shadow:0 3px 12px rgba(23,50,77,.05);}
 .quote {font-size:16px; color:#17324D; line-height:1.55;}
 .quote-meta {font-size:12px; color:#758696; margin-top:10px; font-weight:650;}
@@ -128,7 +158,7 @@ def normalize_dates(df: pd.DataFrame, columns: Iterable[str]) -> pd.DataFrame:
 
 
 if not DATA_FILE.exists():
-    st.error("Source file not found: data/YVF_Adoption_Dashboard_Source.xlsx")
+    st.error("Source file not found: YVF_Adoption_Dashboard_Source.xlsx")
     st.stop()
 
 try:
@@ -171,7 +201,10 @@ st.sidebar.caption("Data source")
 st.sidebar.success("Excel workbook connected")
 st.sidebar.caption("Update the Excel file in the data folder to refresh the dashboard.")
 
-
+st.markdown(
+    f'<div class="hero"><h1>{APP_TITLE}</h1><p>Executive overview of customer adoption, booking performance, user issues, improvement proposals, and customer feedback.</p></div>',
+    unsafe_allow_html=True,
+)
 
 # Overview values are stored in the final row of the sheet.
 ov = overview.iloc[-1] if not overview.empty else pd.Series(dtype="object")
@@ -235,10 +268,14 @@ if page == "🏠 Overview":
         completed_issues = int((issues["Status"].astype(str).str.lower() == "completed").sum())
         st.markdown('<div class="section-title">Management Snapshot</div>', unsafe_allow_html=True)
         st.markdown(
-            f'<div class="insight"><b>Adoption:</b> {fmt_int(active)} active customers out of {fmt_int(onboarded_count)} approved accounts. '
-            f'<b>Bookings:</b> {fmt_int(yvf_bookings)} YVF bookings, equivalent to {fmt_pct(booking_achievement)} of the monthly target. '
-            f'<b>Issues:</b> {open_issues} open and {completed_issues} completed. '
-            f'<b>Customer voice:</b> {len(feedback)} positive feedback records captured.</div>',
+            f'''
+            <div class="insight">
+                <p><b>Adoption:</b> {fmt_int(active)} active customers out of {fmt_int(onboarded_count)} approved accounts.</p>
+                <p><b>Bookings:</b> {fmt_int(yvf_bookings)} YVF bookings, equivalent to {fmt_pct(booking_achievement)} of the monthly target.</p>
+                <p><b>Issues:</b> {open_issues} open and {completed_issues} completed.</p>
+                <p><b>Customer Feedback:</b> {len(feedback)} positive feedback records captured.</p>
+            </div>
+            ''',
             unsafe_allow_html=True,
         )
         latest = issues.sort_values("Date", ascending=False).head(4)[["Date", "Customer", "Issue", "Status"]].copy()
