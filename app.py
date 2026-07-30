@@ -198,7 +198,17 @@ page = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 st.markdown(
-    f'<div class="hero"><h1>{APP_TITLE}</h1><p>Executive overview of customer adoption, booking performance, user issues, improvement proposals, and customer feedback.</p></div>',
+from datetime import datetime
+
+current_time = datetime.now().strftime("%d %b %Y | %H:%M")
+
+st.markdown(
+    f"""
+    <div class="hero">
+        <h1>{APP_TITLE}</h1>
+        <p>📅 Data Updated: {current_time}</p>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
