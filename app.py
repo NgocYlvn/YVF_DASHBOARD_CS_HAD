@@ -228,18 +228,14 @@ if page == "🏠 Overview":
         kpi("Eligible Customers", fmt_int(eligible), "Target customer pool")
     with cols[1]:
         kpi("Onboarded Customers", fmt_int(onboarded_count), f"Onboarding rate {fmt_pct(onboarding_rate)}")
-    with cols[2]:
-        kpi("Active YVF Customers", fmt_int(active), "Customers with YVF bookings")
-    with cols[3]:
+      with cols[3]:
         kpi("Adoption Rate", fmt_pct(source_adoption_rate), "Onboarded / Eligible")
     with cols[4]:
         kpi("YVF Bookings", fmt_int(yvf_bookings), f"Monthly target {fmt_int(monthly_target)}")
-    with cols[5]:
-        kpi("Avg. Processing Time", f"{avg_time:.1f} min", "Per booking")
 
     left, right = st.columns([1.12, 1])
     with left:
-        status_order = ["Fully Adopted", "Trial Booking Completed", "No YVF Booking Yet"]
+        status_order = ["Fully Booking", "Trial Booking, "Not Booking Yet"]
         status_counts = onboarded["YVF Booking Status"].value_counts().reindex(status_order, fill_value=0).reset_index()
         status_counts.columns = ["Status", "Customers"]
         fig = px.bar(status_counts, x="Status", y="Customers", text="Customers", title="Approved Account Adoption Status",
