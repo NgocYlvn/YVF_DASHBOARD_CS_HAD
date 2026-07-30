@@ -190,10 +190,7 @@ if "No." in volume.columns:
 
 # Sidebar
 st.sidebar.markdown("## 📊 YVF Dashboard")
-st.sidebar.markdown(
-    "<div style='color:#C8D2E3; font-size:18px; margin-top:-18px; margin-bottom:15px;'>CS HAD</div>",
-    unsafe_allow_html=True,
-)
+
 page = st.sidebar.radio(
     "Navigation",
     ["🏠 Overview", "👥 Adoption", "📦 Booking status", "⚠️ User Issues", "💡 Improvement", "⭐ Feedback"],
