@@ -139,11 +139,21 @@ def fmt_pct(value) -> str:
 
 
 def kpi(label: str, value: str, note: str = "") -> None:
-    st.markdown(
-        f'<div class="kpi-card"><div class="kpi-label">{label}</div>'
-        f'<div class="kpi-value">{value}</div><div class="kpi-note">{note}</div></div>',
-        unsafe_allow_html=True,
-    )
+   from datetime import datetime
+
+st.markdown(
+    f"""
+    <div class="hero">
+        <h1>{APP_TITLE}</h1>
+        <p>
+            📅 Last Updated: {datetime.today().strftime("%d %b %Y")}
+            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+            📊 Data Source: YVF Adoption Dashboard
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 
 def style_fig(fig, height: int = 350):
