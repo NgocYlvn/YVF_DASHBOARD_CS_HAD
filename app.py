@@ -189,7 +189,7 @@ if "No." in volume.columns:
     volume = volume[pd.to_numeric(volume["No."], errors="coerce").notna()].copy()
 
 # Sidebar
-st.sidebar.markdown("## 📊 YVF Adoption Dashboard")
+st.sidebar.markdown("## 📊 YVF Dashboard")
 st.sidebar.caption("CS HAD")
 page = st.sidebar.radio(
     "Navigation",
