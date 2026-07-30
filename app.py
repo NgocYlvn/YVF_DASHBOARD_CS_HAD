@@ -167,13 +167,9 @@ st.sidebar.markdown("## 📊 CS HAD")
 st.sidebar.caption("YVF Adoption Dashboard")
 page = st.sidebar.radio(
     "Navigation",
-    ["🏠 Overview", "👥 Customer Adoption", "📦 Booking Performance", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Customer Feedback"],
+    ["🏠 Overview", "👥 Adoption", "📦 Booking Status", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Feedback"],
     label_visibility="collapsed",
 )
-st.sidebar.markdown("---")
-st.sidebar.caption("Data source")
-st.sidebar.success("Excel workbook connected")
-st.sidebar.caption("Update the Excel file in the data folder to refresh the dashboard.")
 
 updated_at = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%d/%m/%Y %H:%M")
 st.markdown(
