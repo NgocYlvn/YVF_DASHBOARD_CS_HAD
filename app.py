@@ -206,17 +206,20 @@ yvf_bookings = safe_num(ov.get("YVF Bookings"))
 avg_time = safe_num(ov.get("Avg. Booking Time (min/booking)"))
 new_customer_target = safe_num(ov.iloc[8] if len(ov) > 8 else 0)
 monthly_target = safe_num(ov.iloc[9] if len(ov) > 9 else 0)
-source_adoption_rate = safe_num(ov.iloc[10] if len(ov) > 10 else 0)
+source_adoption_rate = (
+    onboarded_count / eligible
+    if eligible > 0
+    else 0
+)
 booking_achievement = yvf_bookings / monthly_target if monthly_target else 0
 
 if page == "🏠 Overview":
     cols = st.columns(6)
-    with cols[0]: kpi("Eligible Customers", fmt_int(eligible), "Target customer pool")
+    with cols[0]: kpi("Eligible Customers", fmt_int(eligible)
     with cols[1]: kpi("Onboarded Customers", fmt_int(onboarded_count), f"Onboarding rate {fmt_pct(onboarding_rate)}")
-    with cols[2]: kpi("Active YVF Customers", fmt_int(active), "Customers with YVF bookings")
-    with cols[3]: kpi("Adoption Rate", fmt_pct(source_adoption_rate), "YVF bookings / total export HBLs")
-    with cols[4]: kpi("YVF Bookings", fmt_int(yvf_bookings), f"Monthly target {fmt_int(monthly_target)}")
-    with cols[5]: kpi("Avg. Booking Time", f"{avg_time:.1f} min", "Per booking")
+    with cols[3]: kpi("Adoption Rate", fmt_pct(source_adoption_rate)
+    with cols[4]: kpi("YVF Bookings", fmt_int(yvf_bookings)
+    with cols[5]: kpi("Avg. processing times", f"{avg_time:.1f} min", "Per booking")
 
     left, right = st.columns([1.12, 1])
     with left:
