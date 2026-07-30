@@ -167,7 +167,7 @@ st.sidebar.markdown("## 📊 CS HAD")
 st.sidebar.caption("YVF Adoption Dashboard")
 page = st.sidebar.radio(
     "Navigation",
-    ["🏠 Overview", "👥 Adoption", "📦 Booking Status", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Feedback"],
+    ["🏠 Overview", "👥 Adoption", "📦 Booking Status", "⚠️ Issues", "💡 Improvement Proposals", "⭐ Feedback"],
     label_visibility="collapsed",
 )
 
