@@ -44,8 +44,8 @@ st.markdown(
     .block-container {padding-left: 4rem; padding-right: 1.25rem;}
 }
 h1, h2, h3 {color: #17324D;}
-.hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 22px 26px; border-radius: 18px; color: white; box-shadow: 0 8px 24px rgba(11,79,138,.16); margin-bottom: 18px;}
-.hero h1 {color:white; margin:0; font-size:30px;}
+.hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 12px 22px; border-radius: 14px; color: white; box-shadow: 0 4px 12px rgba(11,79,138,.16); margin-bottom: 18px;}
+.hero h1 {color:white; margin:0; font-size:12px;}
 .hero p {margin:8px 0 0 0; opacity:.92; font-size:15px; font-weight:500;}
 .kpi-card {background:white; border:1px solid #E5EAF0; border-radius:15px; padding:16px 17px; min-height:118px; height:100%; box-shadow:0 4px 14px rgba(23,50,77,.06); overflow-wrap:anywhere;}
 .kpi-label {font-size:13px; color:#68798A; font-weight:600; margin-bottom:10px;}
