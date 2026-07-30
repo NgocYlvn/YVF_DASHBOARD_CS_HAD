@@ -28,7 +28,13 @@ st.markdown(
 [data-testid="stSidebar"] * {color: white;}
 [data-testid="stSidebar"] .stRadio label {padding: .35rem .5rem; border-radius: 8px;}
 [data-testid="stSidebar"] .stRadio label:hover {background: rgba(255,255,255,.10);}
-.block-container {padding-top: 1.25rem; padding-bottom: 2rem; max-width: 1500px;}
+.block-container {
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 1500px;
+}
 h1, h2, h3 {color: #17324D;}
 .hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 22px 26px; border-radius: 18px; color: white; box-shadow: 0 8px 24px rgba(11,79,138,.16); margin-bottom: 18px;}
 .hero h1 {color:white; margin:0; font-size:30px;}
