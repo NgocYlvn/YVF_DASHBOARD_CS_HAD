@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Iterable
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import plotly.express as px
@@ -35,42 +37,17 @@ st.markdown(
     padding-right: 2.25rem;
     max-width: 1500px;
 }
-
-/* Keep the collapsed sidebar button from covering dashboard content */
-[data-testid="stAppViewContainer"] .main {
-    overflow-x: hidden;
-}
-
-[data-testid="stAppViewContainer"] section.main {
-    min-width: 0;
-}
-
-[data-testid="collapsedControl"] {
-    left: 0.75rem;
-    top: 0.75rem;
-    z-index: 1000;
-}
-
+[data-testid="stAppViewContainer"] .main {overflow-x: hidden;}
+[data-testid="stAppViewContainer"] section.main {min-width: 0;}
+[data-testid="collapsedControl"] {left: 0.75rem; top: 0.75rem; z-index: 1000;}
 @media (max-width: 1200px) {
-    .block-container {
-        padding-left: 4rem;
-        padding-right: 1.25rem;
-    }
+    .block-container {padding-left: 4rem; padding-right: 1.25rem;}
 }
 h1, h2, h3 {color: #17324D;}
 .hero {background: linear-gradient(110deg,#0B4F8A,#1469A9); padding: 22px 26px; border-radius: 18px; color: white; box-shadow: 0 8px 24px rgba(11,79,138,.16); margin-bottom: 18px;}
 .hero h1 {color:white; margin:0; font-size:30px;}
-.hero p {margin:5px 0 0 0; opacity:.88;}
-.kpi-card {
-    background:white;
-    border:1px solid #E5EAF0;
-    border-radius:15px;
-    padding:16px 17px;
-    min-height:118px;
-    height:100%;
-    box-shadow:0 4px 14px rgba(23,50,77,.06);
-    overflow-wrap:anywhere;
-}
+.hero p {margin:8px 0 0 0; opacity:.92; font-size:15px; font-weight:500;}
+.kpi-card {background:white; border:1px solid #E5EAF0; border-radius:15px; padding:16px 17px; min-height:118px; height:100%; box-shadow:0 4px 14px rgba(23,50,77,.06); overflow-wrap:anywhere;}
 .kpi-label {font-size:13px; color:#68798A; font-weight:600; margin-bottom:10px;}
 .kpi-value {font-size:29px; font-weight:750; color:#17324D; line-height:1.05;}
 .kpi-note {font-size:12px; color:#7D8B99; margin-top:8px;}
@@ -100,7 +77,6 @@ def load_data(path: str) -> Dict[str, pd.DataFrame]:
     xlsx = pd.ExcelFile(path, engine="openpyxl")
     result: Dict[str, pd.DataFrame] = {}
     for sheet in xlsx.sheet_names:
-        # All source sheets use row 1 as a title and row 2 as headers.
         result[sheet] = clean_columns(pd.read_excel(path, sheet_name=sheet, header=1, engine="openpyxl"))
     return result
 
@@ -184,33 +160,30 @@ proposals = normalize_dates(data["Improvement Proposals"], ["Proposal Date"])
 feedback = normalize_dates(data["Customer_Feedback"], ["Feedback Date"])
 issues = normalize_dates(data["User Issues"], ["Date"])
 
-# Remove summary rows from customer volume.
 if "No." in volume.columns:
     volume = volume[pd.to_numeric(volume["No."], errors="coerce").notna()].copy()
 
-# Sidebar
-st.sidebar.markdown("## 📊 YVF Dashboard")
-
+st.sidebar.markdown("## 📊 CS HAD")
+st.sidebar.caption("YVF Adoption Dashboard")
 page = st.sidebar.radio(
     "Navigation",
-    ["🏠 Overview", "👥 Adoption", "📦 Booking status", "⚠️ User Issues", "💡 Improvement", "⭐ Feedback"],
+    ["🏠 Overview", "👥 Customer Adoption", "📦 Booking Performance", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Customer Feedback"],
     label_visibility="collapsed",
+)
+st.sidebar.markdown("---")
+st.sidebar.caption("Data source")
+st.sidebar.success("Excel workbook connected")
+st.sidebar.caption("Update the Excel file in the data folder to refresh the dashboard.")
 
+updated_at = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%d/%m/%Y %H:%M")
 st.markdown(
-    f"""
-    <div class="hero">
-        <h1>{APP_TITLE}</h1>
-        <p>📅 Data Updated: {current_time}</p>
-    </div>
-    """,
+    f'<div class="hero"><h1>{APP_TITLE}</h1><p>🕒 Last updated: {updated_at} (GMT+7)</p></div>',
     unsafe_allow_html=True,
 )
 
-# Overview values are stored in the final row of the sheet.
 ov = overview.iloc[-1] if not overview.empty else pd.Series(dtype="object")
 eligible = safe_num(ov.get("Eligible Customers"))
 total_hbl = safe_num(ov.get("Total Export HBLs"))
-# Duplicate headers are auto-renamed by pandas; use position fallback where needed.
 onboarded_count = safe_num(ov.iloc[2] if len(ov) > 2 else 0)
 onboarding_rate = safe_num(ov.iloc[3] if len(ov) > 3 else 0)
 pending = safe_num(ov.get("Pending Customers"))
@@ -323,27 +296,23 @@ elif page == "📦 Booking Performance":
     left, right = st.columns([1.25, 1])
     with left:
         daily = filtered.groupby("Booking Date", as_index=False)["Bookings"].sum().sort_values("Booking Date")
-        fig = px.line(daily, x="Booking Date", y="Bookings", markers=True, title="Daily YVF Booking Trend",
-                      color_discrete_sequence=[BLUE])
+        fig = px.line(daily, x="Booking Date", y="Bookings", markers=True, title="Daily YVF Booking Trend", color_discrete_sequence=[BLUE])
         fig.update_traces(line=dict(width=3), marker=dict(size=8))
         st.plotly_chart(style_fig(fig), use_container_width=True)
     with right:
         by_mode = filtered.groupby("Transport Mode", as_index=False)["Bookings"].sum()
-        fig = px.pie(by_mode, names="Transport Mode", values="Bookings", hole=.55, title="Bookings by Transport Mode",
-                     color_discrete_sequence=[BLUE, ORANGE, GREEN])
+        fig = px.pie(by_mode, names="Transport Mode", values="Bookings", hole=.55, title="Bookings by Transport Mode", color_discrete_sequence=[BLUE, ORANGE, GREEN])
         st.plotly_chart(style_fig(fig), use_container_width=True)
 
     left, right = st.columns(2)
     with left:
         by_customer = filtered.groupby("Customer Name", as_index=False)["Bookings"].sum().sort_values("Bookings", ascending=False)
-        fig = px.bar(by_customer, x="Customer Name", y="Bookings", text="Bookings", title="Bookings by Customer",
-                     color_discrete_sequence=[ORANGE])
+        fig = px.bar(by_customer, x="Customer Name", y="Bookings", text="Bookings", title="Bookings by Customer", color_discrete_sequence=[ORANGE])
         fig.update_traces(textposition="outside")
         st.plotly_chart(style_fig(fig), use_container_width=True)
     with right:
         by_handler = filtered.groupby("Handled By", as_index=False)["Bookings"].sum().sort_values("Bookings", ascending=False)
-        fig = px.bar(by_handler, x="Handled By", y="Bookings", text="Bookings", title="Bookings by Handler",
-                     color_discrete_sequence=[BLUE])
+        fig = px.bar(by_handler, x="Handled By", y="Bookings", text="Bookings", title="Bookings by Handler", color_discrete_sequence=[BLUE])
         fig.update_traces(textposition="outside")
         st.plotly_chart(style_fig(fig), use_container_width=True)
 
@@ -406,8 +375,7 @@ elif page == "⭐ Customer Feedback":
     with c[3]: kpi("Latest Feedback", feedback["Feedback Date"].max().strftime("%d-%b-%Y") if feedback["Feedback Date"].notna().any() else "–", "Most recent record")
 
     cat = feedback["Category"].value_counts().reset_index(); cat.columns=["Category","Feedback"]
-    fig = px.bar(cat, x="Category", y="Feedback", text="Feedback", title="Positive Feedback by Category",
-                 color_discrete_sequence=[GREEN])
+    fig = px.bar(cat, x="Category", y="Feedback", text="Feedback", title="Positive Feedback by Category", color_discrete_sequence=[GREEN])
     fig.update_traces(textposition="outside")
     st.plotly_chart(style_fig(fig, 300), use_container_width=True)
 
