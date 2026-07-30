@@ -197,11 +197,8 @@ page = st.sidebar.radio(
     label_visibility="collapsed",
 )
 st.sidebar.markdown("---")
-current_time = datetime.now().strftime("%d %b %Y | %H:%M")
-st.markdown(
-from datetime import datetime
-from pathlib import Path
 
+# Lấy thời gian cập nhật cuối của file dữ liệu
 last_update = datetime.fromtimestamp(DATA_FILE.stat().st_mtime)
 current_time = last_update.strftime("%d %b %Y | %H:%M")
 
