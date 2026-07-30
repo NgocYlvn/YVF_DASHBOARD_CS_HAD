@@ -185,27 +185,36 @@ st.sidebar.markdown("## 📊 CS HAD")
 st.sidebar.caption("YVF Adoption Dashboard")
 page = st.sidebar.radio(
     "Navigation",
-    ["🏠 Overview", "👥 Adoption", "📦 Booking Status", "⚠️ Issues", "💡Enhancement", "⭐ Feedback"],
+    ["🏠 Overview", "👥 Customer Adoption", "📦 Booking Performance", "⚠️ User Issues", "💡 Improvement Proposals", "⭐ Customer Feedback"],
     label_visibility="collapsed",
 )
 
 updated_at = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%d/%m/%Y %H:%M")
 st.markdown(
-    f'<div class="hero"><h1>{APP_TITLE}</h1><p>🕒 Last updated: {updated_at} (GMT+7)</p></div>',
+    f"""
+    <div class="hero">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
+            <h1>{APP_TITLE}</h1>
+            <span style="font-size:13px;font-weight:600;white-space:nowrap;">
+                🕒 Last updated: {updated_at}
+            </span>
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 ov = overview.iloc[-1] if not overview.empty else pd.Series(dtype="object")
 eligible = safe_num(ov.get("Eligible Customers"))
 total_hbl = safe_num(ov.get("Total Export HBLs"))
-onboarded_count = safe_num(ov.iloc[2] if len(ov) > 2 else 0)
-onboarding_rate = safe_num(ov.iloc[3] if len(ov) > 3 else 0)
+onboarded_count = safe_num(ov.get("Onboarded Customers"))
+onboarding_rate = onboarded_count / eligible if eligible > 0 else 0
 pending = safe_num(ov.get("Pending Customers"))
 active = safe_num(ov.get("Active YVF Customers"))
 yvf_bookings = safe_num(ov.get("YVF Bookings"))
 avg_time = safe_num(ov.get("Avg. Booking Time (min/booking)"))
-new_customer_target = safe_num(ov.iloc[8] if len(ov) > 8 else 0)
-monthly_target = safe_num(ov.iloc[9] if len(ov) > 9 else 0)
+new_customer_target = safe_num(ov.get("New Customer Target"))
+monthly_target = safe_num(ov.get("Monthly Booking Target"))
 source_adoption_rate = (
     onboarded_count / eligible
     if eligible > 0
@@ -215,11 +224,18 @@ booking_achievement = yvf_bookings / monthly_target if monthly_target else 0
 
 if page == "🏠 Overview":
     cols = st.columns(6)
-    with cols[0]: kpi("Eligible Customers", fmt_int(eligible)
-    with cols[1]: kpi("Onboarded Customers", fmt_int(onboarded_count), f"Onboarding rate {fmt_pct(onboarding_rate)}")
-    with cols[3]: kpi("Adoption Rate", fmt_pct(source_adoption_rate)
-    with cols[4]: kpi("YVF Bookings", fmt_int(yvf_bookings)
-    with cols[5]: kpi("Avg. processing times", f"{avg_time:.1f} min", "Per booking")
+    with cols[0]:
+        kpi("Eligible Customers", fmt_int(eligible), "Target customer pool")
+    with cols[1]:
+        kpi("Onboarded Customers", fmt_int(onboarded_count), f"Onboarding rate {fmt_pct(onboarding_rate)}")
+    with cols[2]:
+        kpi("Active YVF Customers", fmt_int(active), "Customers with YVF bookings")
+    with cols[3]:
+        kpi("Adoption Rate", fmt_pct(source_adoption_rate), "Onboarded / Eligible")
+    with cols[4]:
+        kpi("YVF Bookings", fmt_int(yvf_bookings), f"Monthly target {fmt_int(monthly_target)}")
+    with cols[5]:
+        kpi("Avg. Processing Time", f"{avg_time:.1f} min", "Per booking")
 
     left, right = st.columns([1.12, 1])
     with left:
